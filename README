@@ -1,0 +1,40 @@
+System Call Timing Harness - Darin Ellis 3/24/2018
+
+OVERVIEW
+This program (the "harness" executable  is used to time system calls using 
+a monotonic clock. The program currently only allows the timing of the
+open() and fork() system calls. Other calls can easily be supported by
+creating new init(), callwrapper(), and dummy() functions to measure the
+new system call appropriately.
+
+INSTALLATION
+The "harness" program is created through the included makefile, using "make".
+Currently, it is compiled with minimal optimization, to avoid removing
+functionally useful parts of code that are necessary for accurate testing.
+
+USAGE
+You invoke the program using the format below:
+/harness systemcall x y
+Where harness is the executable, systemcall is whatever system call you
+wish to have timed, x is the number of timed runs of the the system call
+within a single test, and y is the number of tests. Output is the mean
+and standard deviation of the tests in nanoseconds.
+
+The number of tests allowed is large, but I have not ascertained a limit.
+Regardless, several thousand tests can run, albeit slowly.
+
+-open()
+	The open() system call is used with the O_CREAT and O_RDONLY flags
+	so that it will create the file named "test" if it does not exist,
+	and will only read it. 
+
+-fork()
+	The fork() system call is called without any special flags, and its
+	children simply exit while the parent waits.
+
+In general, open() takes more time than fork().
+
+TESTING
+
+The program has only been tested via input. The included test.sh script
+runs through most common cases.
